@@ -1,0 +1,24 @@
+#!/usr/bin/groovy
+@Library('test-shared-library') _
+
+node("docker") {
+    cleanWs()
+    checkout scm
+    def commons = load 'ci/commons.groovy'
+
+    stage("Deploy Testing Infrastructure on AWS") {
+        commons.withAWSCredentials {
+            commons.withTerraform {
+                dir("ci/aws/terraform") {
+                    commons.terraformApply()
+                }
+            }
+        }
+    }
+
+    stage("Save Infrastructure State") {
+        commons.withGit {
+            commons.gitCommit(["ci/aws/terraform/terraform.tfstate"], "Saving Infrastructure State")
+        }
+    }
+}

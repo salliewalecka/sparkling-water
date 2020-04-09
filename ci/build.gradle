@@ -12,7 +12,7 @@ ext {
 }
 
 task copyFiles(type: Copy) {
-  from 'docker/conf'
+  from "$projectDir/docker/conf"
   into "$buildDir/docker/conf"
 }
 

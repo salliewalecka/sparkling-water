@@ -7,7 +7,6 @@ properties(
                 parameters(
                         [
                                 booleanParam(name: 'buildImage', defaultValue: false, description: 'Build Image'),
-                                booleanParam(name: 'publishToHarbor', defaultValue: false, description: 'Publish To Harbor'),
                                 booleanParam(name: 'publishToAWS', defaultValue: true, description: 'Publish To AWS'),
                                 booleanParam(name: 'publishToAWSLastInHarbor', defaultValue: true, description: 'Publish To AWS the last image in harbor'),
                                 booleanParam(name: 'updateNextImageVersion', defaultValue: false, description: 'Update Next Image Version'),
@@ -38,20 +37,13 @@ node('docker') {
         }
     }
 
-    stage("Publish Image to Harbor") {
-        if (params.publishToHarbor.toBoolean()) {
-            sh "docker push harbor.h2o.ai/opsh2oai/sparkling_water_tests:${nextVersion}"
-        }
-    }
-
-
     stage("Publish Image to AWS") {
-        def id = nextVersion
-        if (params.publishToAWSLastInHarbor.toBoolean()) {
-            id = currentVersion
-        }
-        def registryId = commons.readFromInfraState("docker_registry_id")
         if (params.publishToAWS.toBoolean()) {
+            def id = nextVersion
+            if (params.publishToAWSLastInHarbor.toBoolean()) {
+                id = currentVersion
+            }
+            def registryId = commons.readFromInfraState("docker_registry_id")
             commons.withAWSCredentials {
                 def loginCommand = commons.withAWSCLI {
                     return sh(

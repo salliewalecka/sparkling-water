@@ -20,8 +20,13 @@ tags = {
     Name = "Sparkling Water Jenkins"
   }
 
+  provisioner "file" {
+    source      = "init.sh"
+    destination = "/tmp/init.sh"
+  }
+
   provisioner "remote-exec" {
-    inline = ["echo jak se mas"]
+    script = "/tmp/init.sh"
   }
 }
 

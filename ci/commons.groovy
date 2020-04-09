@@ -74,7 +74,7 @@ def terraformDestroy() {
 }
 
 def extractTerraformOutputs(List<String> varNames) {
-    return varNames.collectEntries{ [(it) : commons.terraformOutput(it)] }
+    return varNames.collectEntries{ [(it) : terraformOutput(it)] }
 }
 
 def readFromInfraState(varName) {

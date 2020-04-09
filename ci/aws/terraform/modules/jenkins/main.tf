@@ -30,12 +30,27 @@ resource "aws_security_group" "jenkins_security_group" {
   description = "Security group for master node"
   vpc_id = var.aws_vpc_id
   revoke_rules_on_delete = true
+
+  // SSH Access to Jenkins Machine
   ingress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
     cidr_blocks = [
-      "0.0.0.0/0"]
+      "0.0.0.0/0"
+    ]
+
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+  }
+
+  // Web Access to Jenkins Machine
+  ingress {
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+
+    from_port = 0
+    to_port = 8080
+    protocol = "http"
   }
 
   egress {

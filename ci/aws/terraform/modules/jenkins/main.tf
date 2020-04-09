@@ -11,12 +11,12 @@ resource "aws_instance" "jenkins" {
   ami = "ami-0d1cd67c26f5fca19"
   instance_type = "t2.micro"
   subnet_id = var.aws_subnet_id
-  security_groups = aws_security_group.jenkins_security_group.id
+  vpc_security_group_ids = [aws_security_group.jenkins_security_group.id]
   associate_public_ip_address = true
   key_name = aws_key_pair.key.key_name
 
 
-tags = {
+  tags = {
     Name = "Sparkling Water Jenkins"
   }
 

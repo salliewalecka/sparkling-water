@@ -13,11 +13,12 @@ module "ecr" {
   aws_region = var.aws_region
 }
 
-/*module "jenkins" {
+module "jenkins" {
   source = "./modules/jenkins"
   aws_access_key = var.aws_access_key
   aws_secret_key = var.aws_secret_key
   aws_region = var.aws_region
   aws_availability_zone = var.aws_availability_zone
   aws_subnet_id = module.network.aws_subnet_id
-}*/
+  aws_vpc_id = module.network.aws_vpc_id
+}

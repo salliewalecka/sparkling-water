@@ -14,3 +14,7 @@ variable "aws_availability_zone" {
 variable "aws_subnet_id" {
   default = ""
 }
+
+variable "aws_vpc_id" {
+  default = ""
+}

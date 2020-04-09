@@ -11,7 +11,7 @@ resource "aws_instance" "jenkins" {
   ami = "ami-0d1cd67c26f5fca19"
   instance_type = "t2.micro"
   subnet_id = var.aws_subnet_id
-
+  security_groups = aws_security_group.jenkins_security_group.name
   tags = {
     Name = "Sparkling Water Jenkins"
   }
@@ -23,5 +23,26 @@ resource "aws_instance" "jenkins" {
 
   provisioner "remote-exec" {
     script = "/tmp/init.sh"
+  }
+}
+
+resource "aws_security_group" "jenkins_security_group" {
+  description = "Security group for master node"
+  vpc_id = var.aws_vpc_id
+  revoke_rules_on_delete = true
+  ingress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = [
+      "0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = [
+      "0.0.0.0/0"]
   }
 }

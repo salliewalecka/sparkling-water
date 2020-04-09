@@ -52,7 +52,7 @@ resource "aws_security_group" "jenkins_security_group" {
 
     from_port = 0
     to_port = 8080
-    protocol = "http"
+    protocol = "tcp"
   }
 
   egress {

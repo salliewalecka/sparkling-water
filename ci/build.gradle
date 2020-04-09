@@ -104,8 +104,8 @@ task cleanDockerfile(type: Delete) {
 clean.dependsOn cleanDockerfile
 
 task loginToDockerRepo {
-  def registryId = file("$rootDir/ci/aws/terraform/infra.state").readLines().find(it.startsWith("docker_registry_id")).trim().split(":")[1]
   doLast {
+    def registryId = file("$rootDir/ci/aws/terraform/infra.state").readLines().find(it.startsWith("docker_registry_id")).trim().split(":")[1]
     exec {
       commandLine "\$(aws ecr get-login --region us-west-2 --no-include-email --registry-ids ${registryId})".split(" ")
     }

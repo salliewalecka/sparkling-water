@@ -15,9 +15,9 @@ def internalH2ODockerLogin() {
     })
 }
 
-String getDockerImageVersion() {
+Integer getDockerImageVersion() {
     def versionLine = readFile("gradle.properties").split("\n").find() { line -> line.startsWith('dockerImageVersion') }
-    return versionLine.split("=")[1]
+    return versionLine.split("=")[1].toInteger()
 }
 
 def getSupportedSparkVersions() {

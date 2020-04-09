@@ -56,7 +56,7 @@ def withAWSCLI(groovy.lang.Closure code) {
 }
 
 def withTerraform(groovy.lang.Closure code) {
-    withDocker("hashicorp/terraform:light", code, "--entrypoint=''")
+    withDocker("hashicorp/terraform:0.12.24", code, "--entrypoint=''")
 }
 
 def terraformApply() {
@@ -74,7 +74,7 @@ def terraformDestroy() {
 }
 
 def extractTerraformOutputs(List<String> varNames) {
-    return varNames.collectEntries{ [(it) : terraformOutput(it)] }
+    return varNames.collectEntries { [(it): terraformOutput(it)] }
 }
 
 def readFromInfraState(varName) {
@@ -85,10 +85,10 @@ def readFromInfraState(varName) {
 }
 
 def terraformOutput(varName) {
-    sh """
-        terraform init
-        terraform output $varName
-        """
+    return sh(
+            script: "terraform output $varName",
+            returnStdout: true
+    ).trim()
 }
 
 def withAWSCredentials(code) {

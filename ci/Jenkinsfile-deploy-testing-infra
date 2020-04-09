@@ -12,7 +12,7 @@ node("docker") {
                 dir("ci/aws/terraform") {
                     commons.terraformApply()
                     def values = commons.extractTerraformOutputs(["docker_registry_id", "jenkins_url"])
-                    def valuesAsString = values.collect{ "${it.key}=${it.value}" } join "\n"
+                    def valuesAsString = values.collect{ "${it.key}=${it.value}" } join "\n" + "\n"
                     writeFile file: "infra.properties", text: valuesAsString
                 }
             }

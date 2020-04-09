@@ -20,14 +20,7 @@ resource "aws_instance" "jenkins" {
     Name = "Sparkling Water Jenkins"
   }
 
-  provisioner "file" {
-    source      = "init.sh"
-    destination = "/tmp/init.sh"
-  }
-
-  provisioner "remote-exec" {
-    script = "/tmp/init.sh"
-  }
+  user_data = file("./modules/jenkins/init.sh")
 }
 
 resource "aws_key_pair" "key" {

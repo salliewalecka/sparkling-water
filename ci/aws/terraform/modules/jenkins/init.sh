@@ -1,11 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-sudo apt update -y
-sudo apt upgrade -y
-sudo add-apt-repository universe
-sudo apt install openjdk-8-jre-headless openjdk-8-jre -y
-sudo apt update
-wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
-sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
-sudo apt update
-sudo apt install jenkins -y
+apt-key adv --fetch-keys https://pkg.jenkins.io/debian/jenkins.io.key
+sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+apt update
+apt install openjdk-8-jre-headless openjdk-8-jre jenkins -y
+systemctl enable jenkins
+systemctl start jenkins
+systemctl status jenkins

@@ -18,8 +18,8 @@ node("docker") {
 
     stage("Remove Infrastructure State") {
         commons.withGit {
-            sh "rm -rf ci/aws/terraform/terraform.tfstate"
-            commons.gitCommit(["ci/aws/terraform/terraform.tfstate"], "Removing Infrastructure State")
+            sh "rm -rf ci/aws/terraform/terraform.tfstate ci/aws/terraform/infra.properties"
+            commons.gitCommit(["ci/aws/terraform/terraform.tfstate", "ci/aws/terraform/infra.properties"], "Removing Infrastructure State")
         }
     }
 }

@@ -11,6 +11,9 @@ node("docker") {
             commons.withTerraform {
                 dir("ci/aws/terraform") {
                     commons.terraformApply()
+                    def values = commons.extractTerraformOutputs(["docker_registry_id", "jenkins_url"])
+                    def valuesAsString = values.collect{ "${it.key}=${it.value}" } join "\n"
+                    writeFile file: "infra.properties", text: valuesAsString
                 }
             }
         }
@@ -18,7 +21,7 @@ node("docker") {
 
     stage("Save Infrastructure State") {
         commons.withGit {
-            commons.gitCommit(["ci/aws/terraform/terraform.tfstate"], "Saving Infrastructure State")
+            commons.gitCommit(["ci/aws/terraform/terraform.tfstate", "ci/aws/terraform/infra.properties"], "Saving Infrastructure State")
         }
     }
 }

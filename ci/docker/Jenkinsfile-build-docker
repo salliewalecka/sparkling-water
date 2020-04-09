@@ -18,13 +18,6 @@ properties(
         ]
 )
 
-def getAWSRegistryId() {
-    def line = readFile("ci/aws/terraform/terraform.tfstate").split("\n").find() { line ->
-        line.contains("repository_url")
-    }
-    return line.substring("            \"repository_url\": \"".length()).split("\\.").first()
-}
-
 node('docker') {
     cleanWs()
     checkout scm
@@ -57,12 +50,12 @@ node('docker') {
         if (params.publishToAWSLastInHarbor.toBoolean()) {
             id = currentVersion
         }
-
+        def registryId = commons.readFromInfraState("docker_registry_id")
         if (params.publishToAWS.toBoolean()) {
             commons.withAWSCredentials {
                 def loginCommand = commons.withAWSCLI {
                     return sh(
-                            script: "aws ecr get-login --region us-west-2 --no-include-email --registry-ids ${getAWSRegistryId()}",
+                            script: "aws ecr get-login --region us-west-2 --no-include-email --registry-ids ${registryId}",
                             returnStdout: true
                     ).trim()
                 }

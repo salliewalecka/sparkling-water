@@ -32,7 +32,7 @@ def getSupportedSparkVersions() {
     return sparkVersions
 }
 
-def withDocker(image, groovy.lang.Closure code, String dockerOptions = "", groovy.lang.Closure initCode = { }) {
+def withDocker(image, groovy.lang.Closure code, String dockerOptions = "", groovy.lang.Closure initCode = {}) {
     dockerPull(image)
     docker.image(image).inside("--entrypoint=''") {
         code()
@@ -70,6 +70,24 @@ def terraformDestroy() {
     sh """
         terraform init
         terraform destroy -var aws_access_key=$AWS_ACCESS_KEY_ID -var aws_secret_key=$AWS_SECRET_ACCESS_KEY -auto-approve
+        """
+}
+
+def extractTerraformOutputs(List<String> varNames) {
+    return varNames.collectEntries{ [(it) : commons.terraformOutput(it)] }
+}
+
+def readFromInfraState(varName) {
+    def line = readFile("ci/aws/terraform/infra.properties").split("\n").find() { line ->
+        line.startsWith(varName)
+    }
+    return line.split("=")[1]
+}
+
+def terraformOutput(varName) {
+    sh """
+        terraform init
+        terraform output $varName -var aws_access_key=$AWS_ACCESS_KEY_ID -var aws_secret_key=$AWS_SECRET_ACCESS_KEY
         """
 }
 
